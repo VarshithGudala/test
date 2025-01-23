@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 
 export interface Product {
   id: number;
@@ -25,11 +25,13 @@ export class CatalogService {
     ];
     return of(dummyData); // Replace with `this.http.get<Product[]>(this.apiUrl)` for API call
   }
-  
-  getProductById(id: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/${id}`);
-  }
 
+  getProductById(id: number): Observable<Product> {
+    return this.getProducts().pipe(
+      map((products: any[]) => products.find((product) => product.id === id)!)
+    );
+  }
+  
   deleteProduct(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
