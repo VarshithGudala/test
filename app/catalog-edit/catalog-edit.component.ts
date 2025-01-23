@@ -42,6 +42,7 @@ export class CatalogEditComponent implements OnInit {
 
   saveProduct(): void {
     this.catalogService.updateProduct(this.productId, this.productForm.value).subscribe(() => {
+      alert('Product updated successfully!');
       this.router.navigate(['/catalog']);
     });
   }
