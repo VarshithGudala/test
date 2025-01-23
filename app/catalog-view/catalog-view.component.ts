@@ -1,26 +1,14 @@
-/*import { Component } from '@angular/core';
-
-@Component({
-  selector: 'app-catalog-view',
-  imports: [],
-  templateUrl: './catalog-view.component.html',
-  styleUrl: './catalog-view.component.css'
-})
-export class CatalogViewComponent {
-
-}
-*/
-
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CatalogService } from '../catalog.service';
 import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // Import ReactiveFormsModule
 
 @Component({
   standalone: true,
-  imports: [CommonModule], // Import CommonModule here for *ngFor and other directives
+  imports: [CommonModule,FormsModule, ReactiveFormsModule], // Import CommonModule here for *ngFor and other directives
    selector: 'app-catalog-view',
-  template: './catalog-view.component.html',
+  templateUrl: './catalog-view.component.html',
 })
 export class CatalogViewComponent implements OnInit {
   product: any;
