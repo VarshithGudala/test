@@ -1,31 +1,20 @@
-/*mport { Component } from '@angular/core';
-
-@Component({
-  selector: 'app-catalog-edit',
-  imports: [],
-  templateUrl: './catalog-edit.component.html',
-  styleUrl: './catalog-edit.component.css'
-})
-export class CatalogEditComponent {
-
-}
-*/
-
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CatalogService } from '../catalog.service';
 import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // Import ReactiveFormsModule
+
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { CatalogService } from '../catalog.service';
 
 @Component({
   standalone: true,
-  imports: [CommonModule], // Import CommonModule here for *ngFor and other directives
+  imports: [CommonModule, FormsModule, ReactiveFormsModule], // Import CommonModule here for *ngFor and other directives
    selector: 'app-catalog-edit',
-  template: './catalog-edit.component.html',
+   templateUrl: './catalog-edit.component.html',
 })
 export class CatalogEditComponent implements OnInit {
-  productForm: FormGroup;
-  productId: number;
+  productForm!: FormGroup;
+  productId!: number;
 
   constructor(
     private fb: FormBuilder,
