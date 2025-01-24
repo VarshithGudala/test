@@ -5,6 +5,7 @@ import { map, Observable, of } from 'rxjs';
 export interface Product {
   id: number;
   name: string;
+  description: string;
   price: number;
 }
 
@@ -14,29 +15,37 @@ export interface Product {
 export class CatalogService {
   private apiUrl = 'http://localhost:5230/api/Product'; // Replace with your actual API URL
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
-  getProducts(): Observable<Product[]> {
-    // Dummy data for demonstration
-    const dummyData: Product[] = [
-      { id: 1, name: 'Product 1',  price: 100 },
-      { id: 2, name: 'Product 2',  price: 200 },
-      { id: 3, name: 'Product 3', price: 300 },
-    ];
-    return of(dummyData); // Replace with `this.http.get<Product[]>(this.apiUrl)` for API call
-  }
+    getProducts(): Observable<Product[]> {
+      return new Observable<Product[]>((observer) => {
+        this.http.get<Product[]>(this.apiUrl).subscribe((products) => {
+          if (products && products.length > 0) {
+            console.log('Fetched Products:');
+            products.forEach(product => {
+              console.log(`ID: ${product.id}, Name: ${product.name}, Price: ${product.price}`);
+            });
+            observer.next(products);
+          } else {
+            console.error('No products found or data is empty.');
+            observer.error('No products found or data is empty.');
+          }
+          observer.complete();
+        }, (error) => {
+          console.error('Error fetching products:', error);
+          observer.error(error);
+        });
+      });
+    }
 
   getProductById(id: number): Observable<Product> {
     return this.getProducts().pipe(
       map((products: any[]) => products.find((product) => product.id === id)!)
     );
   }
-  
-  deleteProduct(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+
+  saveProduct(product: Product): Observable<Product> {
+    return this.http.post<Product>(this.apiUrl, product);
   }
 
-  updateProduct(id: number, product: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/${id}`, product);
-  }
 }
