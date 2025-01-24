@@ -10,4 +10,5 @@ export const appRoutes: Routes = [
   { path: 'order', component: OrderSearchComponent },
   { path: 'catalog/view/:id', component: CatalogViewComponent },
   { path: 'catalog/edit/:id', component: CatalogEditComponent },
+  { path: 'new-order', component: CatalogListComponent },
  ];
