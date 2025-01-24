@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { OrderService } from '../order.service';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-order-search',
@@ -19,6 +19,7 @@ export class OrderSearchComponent {
 
   constructor(private fb: FormBuilder, 
   private route: ActivatedRoute,
+  private router: Router,
     private orderService: OrderService) {
     this.searchForm = this.fb.group({
       orderDateFrom: [''],
@@ -34,6 +35,10 @@ export class OrderSearchComponent {
   });
   }
 
+  navigateToNewOrder() {
+    this.router.navigate(['/catalog']);
+  }
+  
   
   searchOrders() {
     this.isLoading = true;
