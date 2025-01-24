@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { OrderService } from '../order.service';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-order-search',
@@ -16,14 +17,24 @@ export class OrderSearchComponent {
   orders: any[] = [];
   isLoading = false;
 
-  constructor(private fb: FormBuilder, private orderService: OrderService) {
+  constructor(private fb: FormBuilder, 
+  private route: ActivatedRoute,
+    private orderService: OrderService) {
     this.searchForm = this.fb.group({
       orderDateFrom: [''],
       orderDateTo: [''],
       orderId: [''],
     });
+
+    // Refresh results when navigating back
+  this.route.queryParams.subscribe((params) => {
+    if (params['refresh'] === 'true') {
+      this.searchOrders();
+    }
+  });
   }
 
+  
   searchOrders() {
     this.isLoading = true;
     this.orderService.searchOrders(this.searchForm.value).subscribe({
