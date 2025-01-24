@@ -1,46 +1,59 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, FormArray, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { OrderService } from '../order.service';
 import { CatalogService } from '../catalog.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  standalone: true,
-  imports: [CommonModule], // Import CommonModule here for *ngFor and other directives
-   selector: 'app-catalog-list',
+  selector: 'app-catalog-list',
+  imports: [CommonModule, FormsModule, ReactiveFormsModule], // Import CommonModule here for *ngFor and other directives
   templateUrl: './catalog-list.component.html',
-  styleUrls: ['./catalog-list.component.css']
+  styleUrls: ['./catalog-list.component.css'],
+  standalone: true,
 })
 export class CatalogListComponent implements OnInit {
-  products: any[] = [];
+  productsForm!: FormGroup;
 
-  constructor(private catalogService: CatalogService, private router: Router) {}
+  constructor(private fb: FormBuilder, 
+    private orderService: OrderService,
+    private catalogService: CatalogService,
+  ) {}
 
   ngOnInit(): void {
-    this.catalogService.getProducts().subscribe(
-      (data) => {
-        if (data && data.length > 0) {
-          this.products = data;
-        } else {
-          console.warn('No products received from the API.');
-        }
-      },
-      (error) => {
-        console.error('Failed to load products:', error);
-      }
-    );
-  }
+    this.productsForm = this.fb.group({
+      products: this.fb.array([]),
+    });
 
-  fetchProducts(): void {
-    this.catalogService.getProducts().subscribe((data) => {
-      this.products = data;
+    this.orderService.getProducts().subscribe((products: any) => {
+      const productArray = this.productsForm.get('products') as FormArray;
+      products.forEach((product: any) => {
+        productArray.push(
+          this.fb.group({
+            id: [product.id],
+            name: [product.name],
+            description: [product.description],
+            quantity: [1],
+            price: [product.price],
+            selected: [false],
+          })
+        );
+      });
     });
   }
 
-  viewProduct(id: number): void {
-    this.router.navigate(['/catalog/view', id]);
+  get products() {
+    return this.productsForm.get('products') as FormArray;
   }
 
-  editProduct(id: number): void {
-    this.router.navigate(['/catalog/edit', id]);
+  onSubmit() {
+    const selectedProducts = this.products.value.filter((p: any) => p.selected);
+    this.orderService.submitOrder({ products: selectedProducts }).subscribe(
+      (response) => {
+        console.log('Order submitted successfully', response);
+      },
+      (error) => {
+        console.error('Error submitting order', error);
+      }
+    );
   }
 }
