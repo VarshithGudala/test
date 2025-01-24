@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, FormArray, FormsModule, ReactiveFormsModule } f
 import { OrderService } from '../order.service';
 import { CatalogService } from '../catalog.service';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-catalog-list',
@@ -16,6 +17,7 @@ export class CatalogListComponent implements OnInit {
 
   constructor(private fb: FormBuilder, 
     private orderService: OrderService,
+    private router: Router,
     private catalogService: CatalogService,
   ) {}
 
@@ -24,8 +26,20 @@ export class CatalogListComponent implements OnInit {
       products: this.fb.array([]),
     });
 
-    this.orderService.getProducts().subscribe((products: any) => {
+    this.catalogService.getProducts().subscribe((products: any) => {
+
+      if (products && products.length > 0) {
+        console.warn('products received from the API.');
+      } else {
+        console.warn('No products received from the API.');
+      }
+
+      console.log(this.productsForm.get('products')?.value);
+
       const productArray = this.productsForm.get('products') as FormArray;
+      
+      console.log(""+productArray);
+
       products.forEach((product: any) => {
         productArray.push(
           this.fb.group({
@@ -38,6 +52,7 @@ export class CatalogListComponent implements OnInit {
           })
         );
       });
+      productArray.reset();
     });
   }
 
@@ -49,11 +64,14 @@ export class CatalogListComponent implements OnInit {
     const selectedProducts = this.products.value.filter((p: any) => p.selected);
     this.orderService.submitOrder({ products: selectedProducts }).subscribe(
       (response) => {
-        console.log('Order submitted successfully', response);
+        alert('Order submitted successfully');
+        this.router.navigate(['/'], { queryParams: { refresh: 'true' } });
       },
       (error) => {
         console.error('Error submitting order', error);
+        this.router.navigate(['/'], { queryParams: { refresh: 'true' } });
       }
+      
     );
   }
 }
