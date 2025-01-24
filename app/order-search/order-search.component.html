@@ -1,0 +1,63 @@
+<div class="container mt-4">
+    <h2 class="text-center">Order Search</h2>
+    <form [formGroup]="searchForm" (ngSubmit)="searchOrders()" class="border p-4 rounded shadow-sm">
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label for="orderDateFrom" class="form-label">Order Date From</label>
+          <input
+            type="date"
+            id="orderDateFrom"
+            class="form-control"
+            formControlName="orderDateFrom"
+          />
+        </div>
+        <div class="col-md-4">
+          <label for="orderDateTo" class="form-label">Order Date To</label>
+          <input
+            type="date"
+            id="orderDateTo"
+            class="form-control"
+            formControlName="orderDateTo"
+          />
+        </div>
+        <div class="col-md-4">
+          <label for="orderId" class="form-label">Order ID</label>
+          <input
+            type="text"
+            id="orderId"
+            class="form-control"
+            formControlName="orderId"
+          />
+        </div>
+      </div>
+      <div class="d-flex justify-content-end mt-3">
+        <button type="submit" class="btn btn-primary" [disabled]="isLoading">
+          {{ isLoading ? 'Searching...' : 'Search Orders' }}
+        </button>
+      </div>
+    </form>
+  
+    <div class="mt-4">
+      <h4 *ngIf="orders.length">Search Results</h4>
+      <table class="table table-bordered table-hover" *ngIf="orders.length">
+        <thead class="table-dark">
+          <tr>
+            <th>Order ID</th>
+            <th>Ordered By</th>
+            <th>Ordered Date</th>
+            <th>Count of Products</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of orders">
+            <td>{{ order.orderId }}</td>
+            <td>{{ order.orderedBy }}</td>
+            <td>{{ order.orderedDate | date }}</td>
+            <td>{{ order.productCount }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <p *ngIf="!orders.length && !isLoading">No results found.</p>
+    </div>
+  </div>
+  
