@@ -20,7 +20,10 @@
           <td>{{ product.get('id')?.value }}</td>
           <td>{{ product.get('name')?.value }}</td>
           <td>{{ product.get('description')?.value }}</td>
-          <td><input type="number" formControlName="quantity" min="1" /></td>
+          <td><select formControlName="quantity">
+                <option *ngFor="let qty of [1, 2, 3, 4, 5]" [value]="qty">{{ qty }}</option>
+              </select>
+        </td>
           <td>{{ product.get('price')?.value }}</td>
         </tr>
       </tbody>
