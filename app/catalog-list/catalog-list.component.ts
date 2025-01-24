@@ -1,16 +1,3 @@
-/*import { Component } from '@angular/core';
-
-@Component({
-  selector: 'app-catalog-list',
-  imports: [],
-  templateUrl: './catalog-list.component.html',
-  styleUrl: './catalog-list.component.css'
-})
-export class CatalogListComponent {
-
-}
-*/
-
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CatalogService } from '../catalog.service';
@@ -29,7 +16,18 @@ export class CatalogListComponent implements OnInit {
   constructor(private catalogService: CatalogService, private router: Router) {}
 
   ngOnInit(): void {
-    this.fetchProducts();
+    this.catalogService.getProducts().subscribe(
+      (data) => {
+        if (data && data.length > 0) {
+          this.products = data;
+        } else {
+          console.warn('No products received from the API.');
+        }
+      },
+      (error) => {
+        console.error('Failed to load products:', error);
+      }
+    );
   }
 
   fetchProducts(): void {
@@ -44,9 +42,5 @@ export class CatalogListComponent implements OnInit {
 
   editProduct(id: number): void {
     this.router.navigate(['/catalog/edit', id]);
-  }
-
-  deleteProduct(id: number): void {
-    this.router.navigate(['/catalog/delete', id]);
   }
 }
