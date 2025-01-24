@@ -34,7 +34,8 @@
         <button type="submit" class="btn btn-primary" [disabled]="isLoading">
           {{ isLoading ? 'Searching...' : 'Search Orders' }}
         </button>
-        <a routerLink="/new-order" class="btn btn-success">+ New Order</a>
+        <button (click)="navigateToNewOrder()" class="btn btn-success">+ New Order</button>
+
       </div>
     </form>
   
