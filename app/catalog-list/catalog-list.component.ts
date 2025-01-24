@@ -62,14 +62,18 @@ export class CatalogListComponent implements OnInit {
 
   onSubmit() {
     const selectedProducts = this.products.value.filter((p: any) => p.selected);
-    this.orderService.submitOrder({ products: selectedProducts }).subscribe(
+
+        this.orderService.submitOrder({ products: selectedProducts }).subscribe(
       (response) => {
         alert('Order submitted successfully');
         this.router.navigate(['/'], { queryParams: { refresh: 'true' } });
       },
       (error) => {
-        console.error('Error submitting order', error);
-        this.router.navigate(['/'], { queryParams: { refresh: 'true' } });
+        alert('Error submitting order');
+        this.router.navigate(['/order'], { queryParams: { refresh: 'true' } }).then((navigated) => {
+          console.log('Navigation Success:', navigated);
+        });
+        
       }
       
     );
