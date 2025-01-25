@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable, of } from 'rxjs';
+import { environment } from '../environments/environment.dev';
 
 export interface Product {
   id: number;
@@ -13,7 +14,7 @@ export interface Product {
   providedIn: 'root',
 })
 export class CatalogService {
-  private apiUrl = 'http://localhost:5230/api/Product'; // Replace with your actual API URL
+  private apiUrl = environment.apiUrl
 
   constructor(private http: HttpClient) { }
 
