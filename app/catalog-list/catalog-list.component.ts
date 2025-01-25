@@ -4,10 +4,25 @@ import { OrderService } from '../order.service';
 import { CatalogService } from '../catalog.service';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { MatTableModule } from '@angular/material/table';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-catalog-list',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule], // Import CommonModule here for *ngFor and other directives
+  imports: [CommonModule, FormsModule, ReactiveFormsModule,
+    MatTableModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatToolbarModule,
+    MatCardModule
+  ], // Import CommonModule here for *ngFor and other directives
   templateUrl: './catalog-list.component.html',
   styleUrls: ['./catalog-list.component.css'],
   standalone: true,
@@ -28,17 +43,17 @@ export class CatalogListComponent implements OnInit {
 
     this.catalogService.getProducts().subscribe((products: any) => {
 
-      if (products && products.length > 0) {
+      /*if (products && products.length > 0) {
         console.warn('products received from the API.');
       } else {
         console.warn('No products received from the API.');
-      }
+      }*/
 
-      console.log(this.productsForm.get('products')?.value);
+      //console.log(this.productsForm.get('products')?.value);
 
       const productArray = this.productsForm.get('products') as FormArray;
       
-      console.log(""+productArray);
+      //console.log(""+productArray);
 
       products.forEach((product: any) => {
         productArray.push(
@@ -52,7 +67,7 @@ export class CatalogListComponent implements OnInit {
           })
         );
       });
-      productArray.reset();
+      //productArray.reset();
     });
   }
 
