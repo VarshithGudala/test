@@ -1,30 +1,24 @@
-/*import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-
-@Component({
-  selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
-})
-export class AppComponent {
-  title = 'coo-ui-app';
-}
-*/
-
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { HeaderComponent } from './header/header.component';
+import { FooterComponent } from './footer/footer.component';
+import { CustomerSearchComponent } from './customer-search/customer-search.component';
 
 @Component({
-  standalone: true,
   selector: 'app-root',
-  imports: [RouterModule],
+  standalone: true,
   template: `
-    <header></header>
+    <app-header></app-header>
     <div class="container mt-4">
-      <router-outlet></router-outlet>
+      <app-customer-search></app-customer-search>
     </div>
-    <footer></footer>
+    <app-footer></app-footer>
   `,
+  imports: [
+    RouterModule,
+    HeaderComponent,
+    FooterComponent,
+    CustomerSearchComponent
+  ]
 })
 export class AppComponent {}
