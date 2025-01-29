@@ -15,6 +15,7 @@ export class CustomerSearchComponent {
   searchForm: FormGroup;
   customers: any[] = [];
   selectedCustomer: any = null;
+  isLoading = false;
 
   constructor(private fb: FormBuilder, 
     private customerService: CustomerService,
@@ -44,11 +45,14 @@ export class CustomerSearchComponent {
 
   onSearch() {
     const filters = this.searchForm.value;
+    this.isLoading = true;
     this.customerService.getCustomers(filters).subscribe(
       (data: any[]) => {
         this.customers = data;
+        this.isLoading = false;
       },
       (error) => {
+        this.isLoading = false;
         console.error('Error fetching customers', error);
       }
     );
