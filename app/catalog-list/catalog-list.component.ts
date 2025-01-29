@@ -1,60 +1,97 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, FormArray, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { OrderService } from '../order.service';
+import { CatalogService } from '../catalog.service';
 import { CommonModule } from '@angular/common';
-import { CustomerService } from '../customer.service';
 import { Router } from '@angular/router';
+import { MatTableModule } from '@angular/material/table';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
-  selector: 'app-customer-search',
+  selector: 'app-catalog-list',
+  imports: [CommonModule, FormsModule, ReactiveFormsModule,
+    MatTableModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatToolbarModule,
+    MatCardModule
+  ], // Import CommonModule here for *ngFor and other directives
+  templateUrl: './catalog-list.component.html',
+  styleUrls: ['./catalog-list.component.css'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './customer-search.component.html',
-  styleUrls: ['./customer-search.component.css']
 })
-export class CustomerSearchComponent {
-  searchForm: FormGroup;
-  customers: any[] = [];
-  selectedCustomer: any = null;
-  isLoading = false;
+export class CatalogListComponent implements OnInit {
+  productsForm!: FormGroup;
 
   constructor(private fb: FormBuilder, 
-    private customerService: CustomerService,
-    private router: Router) {
-    this.searchForm = this.fb.group({
-      customerId: [''],
-      firstName: [''],
-      zipCode: [''],
-      creationDate: ['']
+    private orderService: OrderService,
+    private router: Router,
+    private catalogService: CatalogService,
+  ) {}
+
+
+  ngOnInit(): void {
+    this.productsForm = this.fb.group({
+      products: this.fb.array([]),
+    });
+
+    
+    this.catalogService.getProducts().subscribe((products: any[]) => {
+      console.log('Products received:', products); // Debugging log
+  
+      if (!products || products.length === 0) {
+        console.warn('No products received from the API.');
+        return;
+      }
+  
+      const productArray = this.fb.array(
+        products.map(product =>
+          this.fb.group({
+            id: [product.id],
+            name: [product.name],
+            description: [product.description],
+            quantity: [1],
+            price: [product.price],
+            selected: [false],
+          })
+        )
+      );
+  
+      this.productsForm.setControl('products', productArray);
+      this.productsForm.updateValueAndValidity(); // Ensure UI updates
     });
   }
-
-  selectCustomer(customer: any) 
-  { this.selectedCustomer = customer; }
+  
 
 
-  goToOrderPage(customer: any) 
-    { 
-      if (this.selectedCustomer) 
-        { 
-          this.router.navigate(['/order'], { queryParams: { customerId: customer.id } }); 
-        } 
-      else { alert('Please select a customer first.'); 
 
-      }
-    }
+  get products() {
+    return this.productsForm.get('products') as FormArray;
+  }
 
-  onSearch() {
-    const filters = this.searchForm.value;
-    this.isLoading = true;
-    this.customerService.getCustomers(filters).subscribe(
-      (data: any[]) => {
-        this.customers = data;
-        this.isLoading = false;
+  onSubmit() {
+    const selectedProducts = this.products.value.filter((p: any) => p.selected);
+
+        this.orderService.submitOrder({ products: selectedProducts }).subscribe(
+      (response) => {
+        alert('Order submitted successfully');
+        this.router.navigate(['/'], { queryParams: { refresh: 'true' } });
       },
       (error) => {
-        this.isLoading = false;
-        console.error('Error fetching customers', error);
+        alert('Error submitting order');
+        this.router.navigate(['/order'], { queryParams: { refresh: 'true' } }).then((navigated) => {
+          console.log('Navigation Success:', navigated);
+        });
+        
       }
+      
     );
   }
 }
