@@ -1,49 +1,65 @@
-<div>
-    <div class="card p-3">
-      <form [formGroup]="searchForm" (ngSubmit)="onSearch()">
-        <div class="row g-3">
-            <div class="col-md-4">
-                <label for="customerId">Customer ID</label>
-                <input id="customerId" class="form-control" formControlName="customerId">
-            </div>
-            <div class="col-md-4">
-                <label for="firstName">First Name</label>
-                <input id="firstName" class="form-control" formControlName="firstName">
-                  </div>
-            <div class="col-md-4">
-                <label for="zipCode">ZIP Code</label>
-                <input id="zipCode" class="form-control" formControlName="zipCode">
-                  </div>
+<div class="container mt-4">
+    <h2 class="text-center">Order Search</h2>
+    <form [formGroup]="searchForm" (ngSubmit)="searchOrders()" class="border p-4 rounded shadow-sm">
+      <div class="row g-3">
         <div class="col-md-4">
-            <label for="creationDate">Creation Date</label>
-            <input id="creationDate" class="form-control" formControlName="creationDate" type="date">
-              </div>
-        <button class="btn btn-primary" type="submit">Search</button>
+          <label for="orderDateFrom" class="form-label">Order Date From</label>
+          <input
+            type="date"
+            id="orderDateFrom"
+            class="form-control"
+            formControlName="orderDateFrom"
+          />
         </div>
-      </form>
-    </div>
+        <div class="col-md-4">
+          <label for="orderDateTo" class="form-label">Order Date To</label>
+          <input
+            type="date"
+            id="orderDateTo"
+            class="form-control"
+            formControlName="orderDateTo"
+          />
+        </div>
+        <div class="col-md-4">
+          <label for="orderId" class="form-label">Order ID</label>
+          <input
+            type="text"
+            id="orderId"
+            class="form-control"
+            formControlName="orderId"
+          />
+        </div>
+      </div>
+      <div class="d-flex justify-content-end mt-3">
+        <button type="submit" class="btn btn-primary" [disabled]="isLoading">
+          {{ isLoading ? 'Searching...' : 'Search Orders' }}
+        </button>
+        <button (click)="navigateToNewOrder()" class="btn btn-success">+ New Order</button>
+
+      </div>
+    </form>
   
-    <div class="card mt-4">
-      <table class="table">
-        <thead>
+    <div class="mt-4">
+      <h4 *ngIf="orders.length">Search Results</h4>
+      <table class="table table-bordered table-hover" *ngIf="orders.length">
+        <thead class="table-dark">
           <tr>
-            <th>ID</th>
-            <th>First Name</th>
-            <th>Address</th>
-            <th>ZIP Code</th>
-            <th>Creation Date</th>
+            <th>Order ID</th>
+            <th>Ordered By</th>
+            <th>Ordered Date</th>
+            <th>Count of Products</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let customer of customers">
-            <td>{{ customer.id }}</td>
-            <td>{{ customer.firstName }}</td>
-            <td>{{ customer.address }}</td>
-            <td>{{ customer.zipCode }}</td>
-            <td>{{ customer.creationDate | date }}</td>
+          <tr *ngFor="let order of orders">
+            <td>{{ order.orderId }}</td>
+            <td>{{ order.orderedBy }}</td>
+            <td>{{ order.orderedDate | date }}</td>
+            <td>{{ order.productCount }}</td>
           </tr>
         </tbody>
       </table>
+      <p *ngIf="!orders.length && !isLoading">No results found.</p>
     </div>
   </div>
   
