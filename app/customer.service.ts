@@ -6,8 +6,6 @@ import { Observable, of } from 'rxjs';
   providedIn: 'root'
 })
 export class CustomerService {
-  private apiUrl = 'https://your-dotnet-api-endpoint/customers';
-
   constructor(private http: HttpClient) {}
 
   getCustomers(filters: any): Observable<any[]> {
@@ -18,21 +16,24 @@ export class CustomerService {
         firstName: 'John',
         address: '123 Elm Street',
         zipCode: '12345',
-        creationDate: '2023-01-15T00:00:00'
+        creationDate: '2023-01-15T00:00:00',
+        locations: ['Dallas','Austin', 'Houston','New York']
       },
       {
         id: 2,
         firstName: 'Jane',
         address: '456 Oak Avenue',
         zipCode: '67890',
-        creationDate: '2023-02-20T00:00:00'
+        creationDate: '2023-02-20T00:00:00',
+        locations: ['Los Angeles','Austin', 'Houston','New York']
       },
       {
         id: 3,
         firstName: 'Alice',
         address: '789 Pine Road',
         zipCode: '54321',
-        creationDate: '2023-03-10T00:00:00'
+        creationDate: '2023-03-10T00:00:00',
+        locations: ['Chicago','Austin', 'Houston','New York']
       }
     ];
 
