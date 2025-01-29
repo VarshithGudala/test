@@ -1,9 +1,9 @@
-<div class="header">
-    <h1>Product Catalog</h1>
+  <div class="header">
+    <h3>Product Catalog</h3>
   </div>
-  
+  <div class="card mt-4">
   <form [formGroup]="productsForm" (ngSubmit)="onSubmit()">
-    <table>
+    <table class="table table-bordered table-hover">
       <thead>
         <tr>
           <th>Select</th>
@@ -16,7 +16,7 @@
       </thead>
       <tbody>
         <tr *ngFor="let product of products.controls; let i = index" [formGroupName]="i">
-          <td><input type="checkbox" formControlName="selected" /></td>
+          <td><input type="checkbox" formControlName="selected"/></td>
           <td>{{ product.get('id')?.value }}</td>
           <td>{{ product.get('name')?.value }}</td>
           <td>{{ product.get('description')?.value }}</td>
@@ -27,12 +27,8 @@
           <td>{{ product.get('price')?.value }}</td>
         </tr>
       </tbody>
-    </table>
-  
-    <button type="submit">Submit Order</button>
+    </table>    
+    <p *ngIf="!products.length">No results found.</p>  
+    <button *ngIf="products.length" class="btn btn-success" type="submit">Submit Order</button>
   </form>
-  
-  <div class="footer">
-    <p>&copy; 2025 Catalog App</p>
-  </div>
-  
+  </div>  
