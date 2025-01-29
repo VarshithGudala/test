@@ -9,6 +9,7 @@ export const appRoutes: Routes = [
   { path: '', redirectTo: 'catalog', pathMatch: 'full' },
   { path: 'catalog', component: CatalogListComponent },
   { path: 'order', component: OrderSearchComponent },
+  { path: 'order/:id', component: OrderSearchComponent },
   { path: 'customer', component: CustomerSearchComponent },
   { path: 'catalog/view/:id', component: CatalogViewComponent },
   { path: 'catalog/edit/:id', component: CatalogEditComponent },
