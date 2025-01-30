@@ -1,3 +1,6 @@
+<div class="header">
+  <h3>Order Search</h3>
+</div>
 <div class="card p-3">
   <form [formGroup]="searchForm" (ngSubmit)="searchOrders()">
     <div class="form-row">
@@ -48,6 +51,7 @@
             <th>Ordered By</th>
             <th>Ordered Date</th>
             <th>Count of Products</th>
+            <th>Customer Id</th>
           </tr>
         </thead>
         <tbody>
@@ -56,6 +60,7 @@
             <td>{{ order.orderedBy }}</td>
             <td>{{ order.orderedDate | date }}</td>
             <td>{{ order.productCount }}</td>
+            <td>{{ order.customerId }}</td>
           </tr>
         </tbody>
       </table>
