@@ -22,22 +22,42 @@ export class OrderService {
     const dummyOrders = [
       {
         orderId: '1001',
+        customerId: 1,
         orderedBy: 'John Doe',
         orderedDate: new Date(),
         productCount: 3,
       },
       {
         orderId: '1002',
+        customerId: 2,
+        orderedBy: 'Jane Smith',
+        orderedDate: new Date(),
+        productCount: 5,
+      },
+      {
+        orderId: '1003',
+        customerId: 2,
+        orderedBy: 'John Doe',
+        orderedDate: new Date(),
+        productCount: 3,
+      },
+      {
+        orderId: '1004',
+        customerId: 3,
         orderedBy: 'Jane Smith',
         orderedDate: new Date(),
         productCount: 5,
       },
     ];
 
+    if (criteria.customerId) {
+      return of(dummyOrders.filter(order => order.customerId === +criteria.customerId));
+    }
     return of(dummyOrders);
   }
   
   submitOrder(order: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/submit`, order);
+    
   }
 }
