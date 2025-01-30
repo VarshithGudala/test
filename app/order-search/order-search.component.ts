@@ -7,7 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-order-search',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule], // Import CommonModule here for *ngFor and other directives
+  imports: [CommonModule, FormsModule, ReactiveFormsModule], 
   templateUrl: './order-search.component.html',
   styleUrls: ['./order-search.component.css'],
   providers: [OrderService],
@@ -16,6 +16,7 @@ export class OrderSearchComponent {
   searchForm: FormGroup;
   orders: any[] = [];
   isLoading = false;
+  customerId: string | null = null;
 
   constructor(private fb: FormBuilder, 
   private route: ActivatedRoute,
@@ -27,6 +28,8 @@ export class OrderSearchComponent {
       orderId: [''],
     });
 
+    
+
     // Refresh results when navigating back
   this.route.queryParams.subscribe((params) => {
     if (params['refresh'] === 'true') {
@@ -35,14 +38,32 @@ export class OrderSearchComponent {
   });
   }
 
+  ngOnInit() {
+    // Get CustomerID from route params
+    this.route.queryParams.subscribe(params => {      
+      this.customerId = params['customerId'];
+      if (this.customerId) {
+        this.searchOrders();
+      }
+    });
+  }
+
+
   navigateToNewOrder() {
     this.router.navigate(['/catalog']);
   }
   
   
   searchOrders() {
+    if (!this.customerId) {
+      alert('CustomerID is required to fetch orders');
+      return;
+    }
     this.isLoading = true;
-    this.orderService.searchOrders(this.searchForm.value).subscribe({
+
+    const searchCriteria = { ...this.searchForm.value, customerId: this.customerId };
+
+    this.orderService.searchOrders(searchCriteria).subscribe({
       next: (data) => {
         this.orders = data;
         this.isLoading = false;
