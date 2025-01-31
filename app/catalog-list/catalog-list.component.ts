@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, FormArray, FormsModule, ReactiveFormsModule } f
 import { OrderService } from '../order.service';
 import { CatalogService } from '../catalog.service';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -29,19 +29,25 @@ import { MatCardModule } from '@angular/material/card';
 })
 export class CatalogListComponent implements OnInit {
   productsForm!: FormGroup;
+  customerId: number | 0 = 0;
 
   constructor(private fb: FormBuilder, 
-    private orderService: OrderService,
+    private orderService: OrderService, 
+      private route: ActivatedRoute,
     private router: Router,
     private catalogService: CatalogService,
   ) {}
 
 
+  
   ngOnInit(): void {
     this.productsForm = this.fb.group({
       products: this.fb.array([]),
     });
 
+    this.route.queryParams.subscribe(params => {      
+      this.customerId = params['customerId'];
+    });
     
     this.catalogService.getProducts().subscribe((products: any[]) => {
       console.log('Products received:', products); // Debugging log
@@ -77,12 +83,12 @@ export class CatalogListComponent implements OnInit {
   }
 
   onSubmit() {
-    const selectedProducts = this.products.value.filter((p: any) => p.selected);
+    const selectedProducts = this.products.value;//.filter((p: any) => p.selected);
 
-        this.orderService.submitOrder({ products: selectedProducts }).subscribe(
+        this.orderService.submitOrder(selectedProducts, this.customerId ).subscribe(
       (response) => {
         alert('Order submitted successfully');
-        this.router.navigate(['/'], { queryParams: { refresh: 'true' } });
+        this.router.navigate(['/order'], { queryParams: { customerId: this.customerId, refresh: 'true' } });
       },
       (error) => {
         alert('Error submitting order');
