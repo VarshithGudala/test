@@ -16,7 +16,7 @@ export class OrderSearchComponent {
   searchForm: FormGroup;
   orders: any[] = [];
   isLoading = false;
-  customerId: string | null = null;
+  customerId: number | null = null;
 
   constructor(private fb: FormBuilder, 
   private route: ActivatedRoute,
@@ -29,12 +29,18 @@ export class OrderSearchComponent {
     });
 
     
+    this.route.queryParams.subscribe(params => {      
+      this.customerId = params['customerId'];
+      if (this.customerId) {
+        this.searchOrders();
+      }
+    });
 
     // Refresh results when navigating back
   this.route.queryParams.subscribe((params) => {
-    if (params['refresh'] === 'true') {
+    //if (params['refresh'] === 'true') {
       this.searchOrders();
-    }
+    //}
   });
   }
 
@@ -42,23 +48,19 @@ export class OrderSearchComponent {
     // Get CustomerID from route params
     this.route.queryParams.subscribe(params => {      
       this.customerId = params['customerId'];
-      if (this.customerId) {
+      //if (this.customerId) {
         this.searchOrders();
-      }
+      //}
     });
   }
 
 
   navigateToNewOrder() {
-    this.router.navigate(['/catalog']);
+    this.router.navigate(['/catalog'], { queryParams: { customerId: this.customerId } });
   }
   
   
   searchOrders() {
-    if (!this.customerId) {
-      alert('CustomerID is required to fetch orders');
-      return;
-    }
     this.isLoading = true;
 
     const searchCriteria = { ...this.searchForm.value, customerId: this.customerId };
