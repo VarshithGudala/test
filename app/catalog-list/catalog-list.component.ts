@@ -4,24 +4,10 @@ import { OrderService } from '../order.service';
 import { CatalogService } from '../catalog.service';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatTableModule } from '@angular/material/table';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
-import { MatButtonModule } from '@angular/material/button';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-catalog-list',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule,
-    MatTableModule,
-    MatCheckboxModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatButtonModule,
-    MatToolbarModule,
-    MatCardModule
+  imports: [CommonModule, FormsModule, ReactiveFormsModule
   ], // Import CommonModule here for *ngFor and other directives
   templateUrl: './catalog-list.component.html',
   styleUrls: ['./catalog-list.component.css'],
