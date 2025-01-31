@@ -8,7 +8,7 @@ import { Observable, of } from 'rxjs';
 export class OrderService {
   private apiUrl = 'http://localhost:5230/api/products'; // Replace with your API URL
   private orderApiUrl = 'https://dummyapi.com/orders'; // Replace with actual API endpoint
-
+  private dummyOrders: any[] = [];
 
   constructor(private http: HttpClient) {}
 
@@ -19,7 +19,7 @@ export class OrderService {
 
   searchOrders(criteria: any): Observable<any[]> {
     // Replace with actual API call. Simulating with dummy data.
-    const dummyOrders = [
+    this.dummyOrders = [
       {
         orderId: '1001',
         customerId: 1,
@@ -50,14 +50,28 @@ export class OrderService {
       },
     ];
 
-    if (criteria.customerId) {
-      return of(dummyOrders.filter(order => order.customerId === +criteria.customerId));
+    if (criteria.orderId) {
+    
+    this.dummyOrders = this.dummyOrders.filter(order => order.orderId === criteria.orderId);
     }
-    return of(dummyOrders);
+    if (criteria.customerId) {
+      return of(this.dummyOrders.filter(order => order.customerId === +criteria.customerId));
+    }
+    return of(this.dummyOrders);
   }
   
-  submitOrder(order: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/submit`, order);
+  submitOrder(selectedProducts: any[], customerId: number): Observable<any> {
+    const order = {
+      orderId: Math.floor(1000 + Math.random() * 9000).toString(), // Generate unique order ID
+      customerId: customerId,
+      orderedBy: 'DEV Test',
+      orderedDate: new Date(),
+      productCount: selectedProducts.length,
+      products: selectedProducts
+    };
+    this.dummyOrders.push(order);
+    return of(true);
+    //return this.http.post(`${this.apiUrl}/submit`, order);
     
   }
 }
