@@ -1,0 +1,6 @@
+<div class="login-container">
+    <h2>Welcome to Our Application</h2>
+    <button *ngIf="!isLoggedIn()" (click)="login()">Login with Azure Entra ID</button>
+    <button *ngIf="isLoggedIn()" (click)="logout()">Logout</button>
+  </div>
+  
