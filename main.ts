@@ -15,8 +15,8 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 // MSAL Configuration
 const msalInstance = new PublicClientApplication({
   auth: {
-    clientId: '00e599f2-c3c0-4fc2-9bba-29489f9a189b',
-    authority: 'https://login.microsoftonline.com/65e0ca54-5ef8-4817-9149-3d007c53fe35/oauth2/v2.0/authorize',
+    clientId: 'CLIENT ID',
+    authority: 'https://login.microsoftonline.com/<Tenant ID>/oauth2/v2.0/authorize',
     redirectUri: "http://localhost:4200",//window.location.origin,
     postLogoutRedirectUri: '/'
   },
